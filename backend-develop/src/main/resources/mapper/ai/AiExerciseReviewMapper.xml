@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yumyumcoach.domain.ai.review.mapper.AiExerciseReviewMapper">
+
+    <resultMap id="AiExerciseReviewMap" type="com.yumyumcoach.domain.ai.review.entity.AiExerciseReview">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="weekStartDate" column="week_start_date"/>
+        <result property="evaluationDate" column="evaluation_date"/>
+        <result property="summary" column="summary"/>
+        <result property="recommendation" column="recommendation"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByEmailAndEvaluationDate" resultMap="AiExerciseReviewMap">
+        SELECT id, email, week_start_date, evaluation_date, summary, recommendation, created_at
+        FROM ai_exercise_reviews
+        WHERE email = #{email}
+          AND evaluation_date = #{evaluationDate}
+        LIMIT 1
+    </select>
+
+    <insert id="insertReview" parameterType="com.yumyumcoach.domain.ai.review.entity.AiExerciseReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_exercise_reviews (email, week_start_date, evaluation_date, summary, recommendation, created_at)
+        VALUES (#{review.email}, #{review.weekStartDate}, #{review.evaluationDate}, #{review.summary}, #{review.recommendation}, #{review.createdAt})
+    </insert>
+
+</mapper>

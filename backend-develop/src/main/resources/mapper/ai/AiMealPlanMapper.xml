@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yumyumcoach.domain.ai.mealplan.mapper.AiMealPlanMapper">
+
+    <resultMap id="AiMealPlanMap" type="com.yumyumcoach.domain.ai.mealplan.entity.AiMealPlan">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="planDate" column="plan_date"/>
+        <result property="promptContext" column="prompt_context"/>
+        <result property="rawResponse" column="raw_response"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <resultMap id="AiMealPlanItemMap" type="com.yumyumcoach.domain.ai.mealplan.entity.AiMealPlanItem">
+        <id property="id" column="id"/>
+        <result property="mealPlanId" column="meal_plan_id"/>
+        <result property="mealTime" column="meal_time"/>
+        <result property="menuDescription" column="menu_description"/>
+        <result property="calories" column="calories"/>
+        <result property="highlight" column="highlight"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByEmailAndDate" resultMap="AiMealPlanMap">
+        SELECT id, email, plan_date, prompt_context, raw_response, created_at
+        FROM ai_meal_plans
+        WHERE email = #{email}
+          AND plan_date = #{planDate}
+    </select>
+
+    <select id="findItemsByPlanId" resultMap="AiMealPlanItemMap">
+        SELECT id, meal_plan_id, meal_time, menu_description, calories, highlight, created_at
+        FROM ai_meal_plan_items
+        WHERE meal_plan_id = #{planId}
+        ORDER BY id ASC
+    </select>
+
+    <insert id="insertPlan" parameterType="com.yumyumcoach.domain.ai.mealplan.entity.AiMealPlan" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_meal_plans (email, plan_date, prompt_context, raw_response, created_at)
+        VALUES (#{plan.email}, #{plan.planDate}, #{plan.promptContext}, #{plan.rawResponse}, #{plan.createdAt})
+    </insert>
+
+    <insert id="insertItems" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_meal_plan_items (meal_plan_id, meal_time, menu_description, calories, highlight, created_at)
+        VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{planId}, #{item.mealTime}, #{item.menuDescription}, #{item.calories}, #{item.highlight}, #{item.createdAt})
+        </foreach>
+    </insert>
+
+</mapper>

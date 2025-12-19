@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yumyumcoach.domain.ai.review.mapper.AiNutritionReviewMapper">
+
+    <resultMap id="AiNutritionReviewMap" type="com.yumyumcoach.domain.ai.review.entity.AiNutritionReview">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="weekStartDate" column="week_start_date"/>
+        <result property="evaluationDate" column="evaluation_date"/>
+        <result property="summary" column="summary"/>
+        <result property="carbohydrateStatus" column="carbohydrate_status"/>
+        <result property="proteinStatus" column="protein_status"/>
+        <result property="fatStatus" column="fat_status"/>
+        <result property="calorieStatus" column="calorie_status"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByEmailAndEvaluationDate" resultMap="AiNutritionReviewMap">
+        SELECT id, email, week_start_date, evaluation_date, summary,
+               carbohydrate_status, protein_status, fat_status, calorie_status, created_at
+        FROM ai_nutrition_reviews
+        WHERE email = #{email}
+          AND evaluation_date = #{evaluationDate}
+        LIMIT 1
+    </select>
+
+    <insert id="insertReview" parameterType="com.yumyumcoach.domain.ai.review.entity.AiNutritionReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_nutrition_reviews (email, week_start_date, evaluation_date, summary,
+                                          carbohydrate_status, protein_status, fat_status, calorie_status, created_at)
+        VALUES (#{review.email}, #{review.weekStartDate}, #{review.evaluationDate}, #{review.summary},
+                #{review.carbohydrateStatus}, #{review.proteinStatus}, #{review.fatStatus}, #{review.calorieStatus}, #{review.createdAt})
+    </insert>
+
+</mapper>
